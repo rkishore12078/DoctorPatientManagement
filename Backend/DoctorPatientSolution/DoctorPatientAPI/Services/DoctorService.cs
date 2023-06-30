@@ -51,5 +51,26 @@ namespace DoctorPatientAPI.Services
             // Check if the character is in the set of special characters
             return specialCharacters.Contains(c);
         }
+
+        public async Task<UserDTO?> UpdateDetails(DoctorDTO doctorDTO)
+        {
+            var doctor = await _doctorRepo.Get(doctorDTO.DoctorId);
+            if(doctor == null) return null;
+            doctor.Name= doctorDTO.Name!=null?doctorDTO.Name:doctor.Name;
+            doctor.Phone=doctorDTO.Phone!=null?doctorDTO.Phone:doctor.Phone;
+            doctor.DateOfBirth= doctorDTO.DateOfBirth.Date!=DateTime.Now.Date?doctorDTO.DateOfBirth:doctorDTO.DateOfBirth;
+            doctor.Specialization=doctorDTO.Specialization!=null?doctorDTO.Specialization:doctor.Specialization;
+            doctor.Qualification=doctorDTO.Qualification!=null?doctorDTO.Qualification:doctor.Qualification;
+            doctor.Address=doctorDTO.Address!=null?doctorDTO.Address:doctor.Address;
+            doctor.YearsOfExperience=doctorDTO.YearsOfExperience>0?doctorDTO.YearsOfExperience:doctorDTO.YearsOfExperience;
+            var myDoctor=await _doctorRepo.Update(doctor);
+            if (myDoctor != null)
+            {
+                var userDTO = await _adapterDTO.DoctorIntoUserDTO(doctorDTO);
+                if(userDTO != null) 
+                    return userDTO;
+            }
+            return null;
+        }
     }
 }

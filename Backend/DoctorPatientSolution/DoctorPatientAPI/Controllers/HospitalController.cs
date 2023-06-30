@@ -167,5 +167,14 @@ namespace DoctorPatientAPI.Controllers
             }
             return BadRequest(error);
         }
+
+        [HttpPut]
+        public async Task<ActionResult<UserDTO?>> UpdateDoctorDetails(DoctorDTO doctorDTO)
+        {
+            var doctor=await _doctorService.UpdateDetails(doctorDTO);
+            if(doctor!=null)
+                return Ok(doctor);
+            return BadRequest("Error");
+        }
     }
 }

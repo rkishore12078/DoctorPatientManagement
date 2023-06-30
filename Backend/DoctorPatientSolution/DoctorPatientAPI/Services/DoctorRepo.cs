@@ -47,7 +47,7 @@ namespace DoctorPatientAPI.Services
         {
             try
             {
-                var doctor = await _context.Doctors.SingleOrDefaultAsync(d => d.DoctorId == id);
+                var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.DoctorId == id);
                 if (doctor != null)
                     return doctor;
                 return null;
@@ -66,10 +66,18 @@ namespace DoctorPatientAPI.Services
             return null;
         }
 
-        public Task<Doctor?> Update(Doctor item)
+        public async Task<Doctor?> Update(Doctor item)
         {
             try
             {
+                var doctor = await Get(item.DoctorId);
+                if (doctor != null)
+                {
+                    doctor = item;
+                    _context.Update(doctor);
+                    await _context.SaveChangesAsync();
+                    return doctor;
+                }
                 return null;
             }
             catch (Exception )
