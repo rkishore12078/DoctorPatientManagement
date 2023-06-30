@@ -16,10 +16,13 @@ namespace DoctorPatientAPI.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Doctor>()
-                .HasIndex(d => new { d.Phone,d.Email })
+                .HasIndex(d => new { d.Phone })
                 .IsUnique(true);
             modelBuilder.Entity<Patient>()
-                .HasIndex(p => new { p.Phone, p.Email })
+                .HasIndex(p => new { p.Phone})
+                .IsUnique(true);
+            modelBuilder.Entity<User>()
+                .HasIndex(u => new { u.Email })
                 .IsUnique(true);
         }
     }

@@ -15,6 +15,7 @@ namespace DoctorPatientAPI.Migrations
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DoctorState = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
@@ -31,7 +32,6 @@ namespace DoctorPatientAPI.Migrations
                 {
                     DoctorId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -58,7 +58,6 @@ namespace DoctorPatientAPI.Migrations
                 {
                     PatientId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -81,18 +80,25 @@ namespace DoctorPatientAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Doctors_Phone_Email",
+                name: "IX_Doctors_Phone",
                 table: "Doctors",
-                columns: new[] { "Phone", "Email" },
+                column: "Phone",
                 unique: true,
-                filter: "[Phone] IS NOT NULL AND [Email] IS NOT NULL");
+                filter: "[Phone] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Patients_Phone_Email",
+                name: "IX_Patients_Phone",
                 table: "Patients",
-                columns: new[] { "Phone", "Email" },
+                column: "Phone",
                 unique: true,
-                filter: "[Phone] IS NOT NULL AND [Email] IS NOT NULL");
+                filter: "[Phone] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

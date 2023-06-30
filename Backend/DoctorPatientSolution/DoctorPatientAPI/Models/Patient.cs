@@ -10,14 +10,12 @@ namespace DoctorPatientAPI.Models
             Name = string.Empty;
             Gender = "Unknown";
         }
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int PatientId { get; set; }
         [ForeignKey("PatientId")]
         public User? Users { get; set; }
         [RegularExpression("^[a-zA-Z0-9\\s]*$", ErrorMessage = "Special characters are not allowed.")]
         public string? Name { get; set; }
-        [RegularExpression("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email address.")]
-        public string? Email { get; set; }
         public DateTime DateOfBirth { get; set; }
         public int Age {
             get

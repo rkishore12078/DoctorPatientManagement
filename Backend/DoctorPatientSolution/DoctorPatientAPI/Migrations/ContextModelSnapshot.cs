@@ -36,9 +36,6 @@ namespace DoctorPatientAPI.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
@@ -59,9 +56,9 @@ namespace DoctorPatientAPI.Migrations
 
                     b.HasKey("DoctorId");
 
-                    b.HasIndex("Phone", "Email")
+                    b.HasIndex("Phone")
                         .IsUnique()
-                        .HasFilter("[Phone] IS NOT NULL AND [Email] IS NOT NULL");
+                        .HasFilter("[Phone] IS NOT NULL");
 
                     b.ToTable("Doctors");
                 });
@@ -79,9 +76,6 @@ namespace DoctorPatientAPI.Migrations
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("EmergencyContactName")
                         .HasColumnType("nvarchar(max)");
@@ -106,9 +100,9 @@ namespace DoctorPatientAPI.Migrations
 
                     b.HasKey("PatientId");
 
-                    b.HasIndex("Phone", "Email")
+                    b.HasIndex("Phone")
                         .IsUnique()
-                        .HasFilter("[Phone] IS NOT NULL AND [Email] IS NOT NULL");
+                        .HasFilter("[Phone] IS NOT NULL");
 
                     b.ToTable("Patients");
                 });
@@ -124,6 +118,9 @@ namespace DoctorPatientAPI.Migrations
                     b.Property<string>("DoctorState")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<byte[]>("PasswordHash")
                         .HasColumnType("varbinary(max)");
 
@@ -134,6 +131,10 @@ namespace DoctorPatientAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
