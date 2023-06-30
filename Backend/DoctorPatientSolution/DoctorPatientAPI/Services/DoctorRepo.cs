@@ -1,5 +1,7 @@
-﻿using DoctorPatientAPI.Interfaces;
+﻿using DoctorPatientAPI.Exceptions;
+using DoctorPatientAPI.Interfaces;
 using DoctorPatientAPI.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorPatientAPI.Services
@@ -22,18 +24,18 @@ namespace DoctorPatientAPI.Services
             {
                 transaction.CreateSavepoint("Doctor");
                 await _userRepo.Add(item.Users);
-                var user=_context.Users.OrderByDescending(u => u.UserId).FirstOrDefault();
+                var user = _context.Users.OrderByDescending(u => u.UserId).FirstOrDefault();
                 item.DoctorId = user.UserId;
                 _context.Doctors.Add(item);
                 await _context.SaveChangesAsync();
                 transaction.Commit();
                 return item;
             }
-            catch (Exception)
+            catch (SqlException ex)
             {
                 transaction.RollbackToSavepoint("Doctor");
+                throw new InvalidSqlException(ex.Number);
             }
-            return null;
         }
 
         public Task<Doctor?> Delete(int id)

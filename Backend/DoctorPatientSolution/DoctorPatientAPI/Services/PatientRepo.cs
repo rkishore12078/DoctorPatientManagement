@@ -1,5 +1,7 @@
-﻿using DoctorPatientAPI.Interfaces;
+﻿using DoctorPatientAPI.Exceptions;
+using DoctorPatientAPI.Interfaces;
 using DoctorPatientAPI.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorPatientAPI.Services
@@ -29,11 +31,11 @@ namespace DoctorPatientAPI.Services
                 transaction.Commit();
                 return item;
             }
-            catch (Exception)
+            catch (SqlException ex)
             {
-                transaction.RollbackToSavepoint("Patient");
+                transaction.RollbackToSavepoint("Doctor");
+                throw new InvalidSqlException(ex.Number);
             }
-            return null;
         }
 
         public Task<Patient?> Delete(int id)

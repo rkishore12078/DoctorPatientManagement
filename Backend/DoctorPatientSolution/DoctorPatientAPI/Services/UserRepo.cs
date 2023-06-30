@@ -1,5 +1,7 @@
-﻿using DoctorPatientAPI.Interfaces;
+﻿using DoctorPatientAPI.Exceptions;
+using DoctorPatientAPI.Interfaces;
 using DoctorPatientAPI.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorPatientAPI.Services
@@ -20,8 +22,15 @@ namespace DoctorPatientAPI.Services
                 await _context.SaveChangesAsync();
                 return item;
             }
-            catch (Exception)
+            catch (SqlException ex)
             {
+                throw new InvalidSqlException(ex.Number);
+            }
+            catch (Exception ex)
+            {
+                var sqlException = ex.InnerException as SqlException;
+                if (sqlException != null)
+                    throw sqlException;
                 throw new Exception();
             }
         }
