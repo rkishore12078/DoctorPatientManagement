@@ -7,10 +7,16 @@ namespace DoctorPatientAPI.Services
     public class DoctorService:IManageDoctor
     {
         private readonly IRepo<Doctor, int> _doctorRepo;
+        private readonly IPasswordGenerate _doctorPassword;
+        private readonly IAdapterDTO _adapterDTO;
 
-        public DoctorService(IRepo<Doctor,int> doctorRepo)
+        public DoctorService(IRepo<Doctor,int> doctorRepo,
+                             IPasswordGenerate doctorPassword,
+                             IAdapterDTO adapterDTO)
         {
             _doctorRepo= doctorRepo;
+            _doctorPassword= doctorPassword;
+            _adapterDTO= adapterDTO;
         }
 
         public async Task<UserDTO?> DoctorRegister(DoctorDTO doctorDTO)
@@ -18,14 +24,13 @@ namespace DoctorPatientAPI.Services
             var tempPassword=doctorDTO.Password;
             if (!IsStrongPassword(tempPassword))
             {
-                //doctorDTO.Password=
+                doctorDTO.Password= _doctorPassword.DoctorPasword(doctorDTO);
             }
-
-
-
+            doctorDTO.Users= _adapterDTO.DoctorIntoUser(doctorDTO);
             var doctor=await _doctorRepo.Add(doctorDTO);
             if (doctor == null) return null;
-            //var userDTO = null;
+            var userDTO=await _adapterDTO.DoctorIntoUserDTO(doctorDTO);
+            if(userDTO !=null) return userDTO;
             return null;
         }
 
@@ -43,7 +48,6 @@ namespace DoctorPatientAPI.Services
         {
             // Define the set of special characters
             var specialCharacters = "!@#$%^&*()-_=+[]{}\\|;:'\",.<>/?";
-
             // Check if the character is in the set of special characters
             return specialCharacters.Contains(c);
         }

@@ -9,13 +9,16 @@ namespace DoctorPatientAPI.Adapters
     public class AdapterDTO:IAdapterDTO
     {
         private readonly ITokenService _tokenService;
+        private readonly IRepo<User, int> _userRepo;
 
-        public AdapterDTO(ITokenService tokenService)
+        public AdapterDTO(ITokenService tokenService,
+                            IRepo<User,int> userRepo)
         {
             _tokenService=tokenService;
+            _userRepo=userRepo;
         }
 
-        public async Task<User?> DoctorIntoUser(DoctorDTO doctorDTO)
+        public User? DoctorIntoUser(DoctorDTO doctorDTO)
         {
             var hmac = new HMACSHA512();
             doctorDTO.Users.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(doctorDTO.Password ?? "1234"));
@@ -23,14 +26,38 @@ namespace DoctorPatientAPI.Adapters
             doctorDTO.Users.Role = "Doctor";
             return doctorDTO.Users;
         }
-        public async Task<User?> PatientIntoUser(PatientDTO patientDTO)
+        public User? PatientIntoUser(PatientDTO patientDTO)
         {
-            //var hmac = new HMACSHA512();
-            //doctorDTO.Users.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(doctorDTO.Password ?? "1234"));
-            //doctorDTO.Users.PasswordKey = hmac.Key;
-            //doctorDTO.Users.Role = "Doctor";
-            //return doctorDTO.Users;
-            return null;
+            var hmac = new HMACSHA512();
+            patientDTO.Users.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(patientDTO.Password ?? "1234"));
+            patientDTO.Users.PasswordKey = hmac.Key;
+            patientDTO.Users.Role = "Patient";
+            return patientDTO.Users;
+        }
+        public async Task<UserDTO?> DoctorIntoUserDTO(DoctorDTO doctor)
+        {
+            UserDTO user = new UserDTO();
+            user.UserId = doctor.DoctorId;
+            var myUser = await _userRepo.Get(user.UserId);
+            if (myUser == null) return null;
+            user.Role = myUser.Role;
+            user.Email= myUser.Email;
+            user.Password=doctor.Password;
+            user.Token = _tokenService.GenerateToken(user);
+            return user;
+        }
+
+        public async Task<UserDTO?> PatientIntoUserDTO(PatientDTO patient)
+        {
+            UserDTO user = new UserDTO();
+            user.UserId = patient.PatientId;
+            var myUser = await _userRepo.Get(user.UserId);
+            if (myUser == null) return null;
+            user.Role = myUser.Role;
+            user.Email = myUser.Email;
+            user.Password = patient.Password;
+            user.Token = _tokenService.GenerateToken(user);
+            return user;
         }
     }
 }

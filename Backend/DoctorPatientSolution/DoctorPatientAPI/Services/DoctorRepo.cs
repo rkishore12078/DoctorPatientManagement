@@ -18,6 +18,9 @@ namespace DoctorPatientAPI.Services
             try
             {
                 transaction.CreateSavepoint("Doctor");
+                _context.Users.Add(item.Users);
+                var user=_context.Users.OrderByDescending(u => u.UserId).FirstOrDefault();
+                item.DoctorId = user.UserId;
                 _context.Doctors.Add(item);
                 await _context.SaveChangesAsync();
                 transaction.Commit();
