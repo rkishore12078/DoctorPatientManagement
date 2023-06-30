@@ -143,5 +143,29 @@ namespace DoctorPatientAPI.Controllers
             }
             return BadRequest(error);
         }
+
+        [HttpPut]
+        [ProducesResponseType(typeof(User), StatusCodes.Status201Created)]//Success Response
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<User?>> UpdatePassword(PasswordDTO passwordDTO)
+        {
+            try
+            {
+                var user = await _userService.UpdatePassword(passwordDTO);
+                if (user != null)
+                    return Ok(user);
+                error.ID = 404;
+                error.Message = new Messages().messages[13];
+                return NotFound(error);
+            }
+            catch (Exception)
+            {
+                error.ID = 400;
+                error.Message = new Messages().messages[8];
+                _logger.LogError(error.Message);
+            }
+            return BadRequest(error);
+        }
     }
 }

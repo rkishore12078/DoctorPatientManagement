@@ -18,7 +18,8 @@
                 "Unable to Update the Doctor",
                 "Unable to Update the Patient",
                 "Unable to Change status",
-                "Email and PhoneNumber should be unique"
+                "Email and PhoneNumber should be unique",
+                "Unable to Update Password"
             };
         }
     }

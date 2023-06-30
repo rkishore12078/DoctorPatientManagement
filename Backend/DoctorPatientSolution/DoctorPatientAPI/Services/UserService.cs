@@ -68,5 +68,22 @@ namespace DoctorPatientAPI.Services
             }
             return null;   
         }
+
+        public async Task<User?> UpdatePassword(PasswordDTO passwordDTO)
+        {
+            var user = await _userRepo.Get(passwordDTO.UserID);
+            if (user != null)
+            {
+                var hmac = new HMACSHA512();
+                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(passwordDTO.NewPassword));
+                user.PasswordKey = hmac.Key;
+                var result = await _userRepo.Update(user);
+                if (result != null)
+                {
+                    return user;
+                }
+            }
+            return null;
+        }
     }
 }
