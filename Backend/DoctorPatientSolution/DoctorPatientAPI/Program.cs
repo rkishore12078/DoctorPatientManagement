@@ -1,5 +1,11 @@
+using DoctorPatientAPI.Adapters;
+using DoctorPatientAPI.Interfaces;
 using DoctorPatientAPI.Models;
+using DoctorPatientAPI.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +20,37 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<Context>
                (options => options.UseSqlServer(builder.Configuration.GetConnectionString("myConn")));
 
+builder.Services.AddScoped<IManageDoctor,DoctorService>();
+builder.Services.AddScoped<IManagePatient, PatientService>();
+builder.Services.AddScoped<IManageUser, UserService>();
+builder.Services.AddScoped<IRepo<User,int>,UserRepo>();
+builder.Services.AddScoped<IRepo<Doctor,int>,DoctorRepo>();
+builder.Services.AddScoped<IRepo<Patient,int>,PatientRepo>();
+builder.Services.AddScoped<IPasswordGenerate,PasswordService>();
+builder.Services.AddScoped<IAdapterDTO,AdapterDTO>();
+builder.Services.AddScoped<ITokenService,TokenService>();
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(options =>
+               {
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuerSigningKey = true,
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"])),
+                       ValidateIssuer = false,
+                       ValidateAudience = false
+                   };
+               });
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy("MyCors", policy =>
+    {
+        policy.AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin();
+    });
+});
 
 var app = builder.Build();
 

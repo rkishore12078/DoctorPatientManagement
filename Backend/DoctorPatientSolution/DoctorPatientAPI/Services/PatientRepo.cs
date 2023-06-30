@@ -7,10 +7,13 @@ namespace DoctorPatientAPI.Services
     public class PatientRepo : IRepo<Patient, int>
     {
         private readonly Context _context;
+        private readonly IRepo<User, int> _userRepo;
 
-        public PatientRepo(Context context)
+        public PatientRepo(Context context,
+                            IRepo<User,int> userRepo)
         {
             _context = context;
+            _userRepo= userRepo;
         }
         public async Task<Patient?> Add(Patient item)
         {
@@ -18,6 +21,9 @@ namespace DoctorPatientAPI.Services
             try
             {
                 transaction.CreateSavepoint("Patient");
+                await _userRepo.Add(item.Users);
+                var user =_context.Users.OrderByDescending(u => u.UserId).FirstOrDefault();
+                item.PatientId = user.UserId;
                 _context.Patients.Add(item);
                 await _context.SaveChangesAsync();
                 transaction.Commit();

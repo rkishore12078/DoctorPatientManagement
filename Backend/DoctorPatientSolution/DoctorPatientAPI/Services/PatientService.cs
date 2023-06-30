@@ -5,7 +5,7 @@ using DoctorPatientAPI.Models.DTOs;
 
 namespace DoctorPatientAPI.Services
 {
-    public class PatientService
+    public class PatientService:IManagePatient
     {
         private readonly IRepo<Patient, int> _patientRepo;
         private readonly IPasswordGenerate _patientPassword;
