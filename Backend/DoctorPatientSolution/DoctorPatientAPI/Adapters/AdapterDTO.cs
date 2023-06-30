@@ -60,5 +60,15 @@ namespace DoctorPatientAPI.Adapters
             user.Token = _tokenService.GenerateToken(user);
             return user;
         }
+
+        public UserDTO? UserIntoUserDTO(User user)
+        {
+            UserDTO? userDTO = new UserDTO();
+            userDTO.Email = user.Email;
+            userDTO.UserId = user.UserId;
+            userDTO.Role = user.Role;
+            userDTO.Token = _tokenService.GenerateToken(userDTO);
+            return userDTO;
+        }
     }
 }

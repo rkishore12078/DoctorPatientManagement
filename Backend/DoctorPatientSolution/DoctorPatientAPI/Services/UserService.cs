@@ -11,17 +11,16 @@ namespace DoctorPatientAPI.Services
     public class UserService:IManageUser
     {
         private readonly IRepo<User, int> _userRepo;
-        private readonly ITokenService _tokenService;
+        private readonly IAdapterDTO _adapter;
 
         public UserService(IRepo<User,int> userRepo,
-                           ITokenService tokenService)
+                           IAdapterDTO adapter)
         {
             _userRepo=userRepo;
-            _tokenService=tokenService;
+            _adapter=adapter;
         }
         public async Task<UserDTO?> Login(UserDTO? userDTO)
         {
-            UserDTO? user=null;
             userDTO = await GetIdByEmail(userDTO);
             if (userDTO == null) return null;
             var userData = await _userRepo.Get(userDTO.UserId);
@@ -34,14 +33,11 @@ namespace DoctorPatientAPI.Services
                     if (userPass[i] != userData.PasswordHash[i])
                         return null;
                 }
-                user = new UserDTO();
-                user.Email= userDTO.Email;
-                user.Password= userDTO.Password;
-                user.UserId = userData.UserId;
-                user.Role = userData.Role;
-                user.Token = _tokenService.GenerateToken(user);
+                var user = _adapter.UserIntoUserDTO(userData);
+                if (user != null)
+                    return user;
             }
-            return user;
+            return null;
         }
         private async Task<UserDTO?> GetIdByEmail(UserDTO? userDTO)
         {
@@ -51,9 +47,26 @@ namespace DoctorPatientAPI.Services
                 var user = users.SingleOrDefault(u=>u.Email==userDTO.Email);
                 if (user == null) return null;
                 userDTO.UserId = user.UserId;
-                return userDTO;
+                return userDTO; 
             }
             return null;
+        }
+
+        public async Task<User?> ChangeStatus(UserIdsDTO userID)
+        {
+            var user = await _userRepo.Get(userID.UserID);
+            if (user != null)
+            {
+                if (user.DoctorState == "Inactive")
+                    user.DoctorState = "Active";
+                else if (user.DoctorState == "Active")
+                    user.DoctorState = "Inactive";
+                else
+                    user.DoctorState = "Active";
+                var myUser=await _userRepo.Update(user);
+                return myUser;
+            }
+            return null;   
         }
     }
 }

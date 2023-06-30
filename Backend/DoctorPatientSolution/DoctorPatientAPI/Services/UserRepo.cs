@@ -54,9 +54,16 @@ namespace DoctorPatientAPI.Services
             return null;
         }
 
-        public Task<User?> Update(User item)
+        public async Task<User?> Update(User item)
         {
-            throw new NotImplementedException();
+            var user = await Get(item.UserId);
+            if (user != null)
+            {
+                user = item;
+                await _context.SaveChangesAsync();
+                return user;
+            }
+            return null;
         }
     }
 }

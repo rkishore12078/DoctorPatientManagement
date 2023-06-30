@@ -9,5 +9,6 @@ namespace DoctorPatientAPI.Interfaces
         public User? PatientIntoUser(PatientDTO patientDTO);
         public Task<UserDTO?> DoctorIntoUserDTO(DoctorDTO doctor);
         public Task<UserDTO?> PatientIntoUserDTO(PatientDTO patient);
+        public UserDTO? UserIntoUserDTO(User user);
     }
 }
