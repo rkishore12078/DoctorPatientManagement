@@ -36,6 +36,11 @@ namespace DoctorPatientAPI.Services
                 transaction.RollbackToSavepoint("Doctor");
                 throw new InvalidSqlException(ex.Number);
             }
+            catch (Exception)
+            {
+                transaction.RollbackToSavepoint("Doctor");
+            }
+            return null;
         }
 
         public Task<Doctor?> Delete(int id)

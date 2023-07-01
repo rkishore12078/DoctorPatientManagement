@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { Box,Stack,TextField,CircularProgress} from "@mui/material";
 import '../Css/Login.css'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../HospitalSlice";
 
-function Login() {
+function Login(props) {
 
     var [loading,setLoading]=useState(false);
+    var dispatch=useDispatch();
+    var navigate=useNavigate();
+    var myData;
+    const[credential,setCredentail]=useState('');
 
     const[user,setUser]=useState(
         {
@@ -34,16 +40,42 @@ function Login() {
         {
             if(data.status == 200)
             {
-                var myData = await data.json();
+                setCredentail("");
+                myData = await data.json();
+                dispatch(addUser(myData));
+                settingLocalStorage();
+                decide();
                 console.log(myData);
-                // navigate("/second/"+myData.gender)
-                
+            }
+            else if(data.status==400)
+            {
+                setCredentail("Invalid Username or password");
+            }
+            else if(data.status==401)
+            {
+                setCredentail("Server down try again");
             }
         })
         .catch((err)=>
         {
                 console.log(err.error)
         })
+    }
+
+    var decide=()=>
+    {
+        if(myData.role=="Admin")
+            navigate('/adminPage');
+        else if(myData.role=="Doctor")
+            navigate('/doctorPage');
+        else if(myData.role="Patient")
+            navigate('/patientPage');
+    }
+
+    var settingLocalStorage=()=>{
+        localStorage.setItem("token",myData.token);
+        localStorage.setItem("role",myData.role);
+        localStorage.setItem("userId",myData.userId);
     }
 
     return (
@@ -96,6 +128,9 @@ function Login() {
                             Register now
                         </Link>
                     </p>
+                    <div>
+                        {credential}
+                    </div>
                 </Stack>
             </Box>
         </div >

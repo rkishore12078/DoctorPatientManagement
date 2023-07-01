@@ -116,7 +116,7 @@ namespace DoctorPatientAPI.Controllers
             }
             catch (Exception)
             {
-                error.ID = 400;
+                error.ID = 401;
                 error.Message = new Messages().messages[8];
                 _logger.LogError(error.Message);
             }

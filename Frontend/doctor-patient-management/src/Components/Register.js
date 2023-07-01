@@ -1,5 +1,7 @@
 import React, { useState ,useRef} from "react";
 import '../Css/Register.css'
+import { useDispatch } from "react-redux";
+import { addUser } from "../HospitalSlice";
 
 
 
@@ -9,6 +11,8 @@ function Register() {
     const [role,setRole]=useState();
     const[confirmPassword,setConfirmPassword]=useState("");
     const[passwordToggle,setPasswordToggle]=useState(false);
+    var dispatch=useDispatch();
+    var myData;
 
     var checkPassword=()=>
     {
@@ -67,12 +71,18 @@ function Register() {
         })
         .then(async (data)=>
         {
-            if(data.status == 200)
+            if(data.status == 201)
             {
-                var myData = await data.json();
+                myData = await data.json();
+                dispatch(addUser(myData));
+                settingLocalStorage();
                 console.log(myData);
                 // navigate("/second/"+myData.gender)
                 
+            }
+            else
+            {
+                console.log("helo");
             }
         })
         .catch((err)=>
@@ -96,9 +106,11 @@ function Register() {
         })
         .then(async (data)=>
         {
-            if(data.status == 200)
+            if(data.status == 201)
             {
-                var myData = await data.json();
+                myData = await data.json();
+                dispatch(addUser(myData));
+                settingLocalStorage();
                 console.log(myData);
                 // navigate("/second/"+myData.gender)
                 
@@ -106,7 +118,7 @@ function Register() {
         })
         .catch((err)=>
         {
-                console.log(err.error)
+                console.log(err.body)
         })
     }
 
@@ -114,9 +126,20 @@ function Register() {
     {
         setDoctor((doctor)=>{
             return ({
-                ...doctor, "email": { ...doctor.email,event.target.value },
+                ...doctor, "users": { ...doctor.users,["email"]:event.target.value },
             });
         })
+        setPatient((patient)=>{
+            return ({
+                ...patient, "users": { ...patient.users,["email"]:event.target.value },
+            });
+        })
+    }
+
+    var settingLocalStorage=()=>{
+        localStorage.setItem("token",myData.token);
+        localStorage.setItem("role",myData.role);
+        localStorage.setItem("userId",myData.userId);
     }
 
     return (
@@ -196,7 +219,7 @@ function Register() {
                                 <div>
                                     <label>MedicalHistory</label>
                                     <input type="text" onChange={(event)=>{
-                                        setDoctor({...doctor,"medicalHistory":event.target.value})
+                                        setDoctor({...patient,"medicalHistory":event.target.value})
                                     }}/>
                                 </div>
                             }
@@ -208,7 +231,7 @@ function Register() {
                         <div>
                             <label>Qualification</label>
                             <input type="text" onChange={(event)=>{
-                                setDoctor({...doctor,"qualification":event.target.value})
+                                setDoctor({...patient,"qualification":event.target.value})
                             }}/>
                         </div>
                     ):(
@@ -217,7 +240,7 @@ function Register() {
                                 <div>
                                     <label>EmergencyContactName</label>
                                     <input type="text" onChange={(event)=>{
-                                        setDoctor({...doctor,"emergencyContactName":event.target.value})
+                                        setDoctor({...patient,"emergencyContactName":event.target.value})
                                     }}/>
                                 </div>
                             }
@@ -239,7 +262,7 @@ function Register() {
                                 <div>
                                     <label>EmergencyContactNumber</label>
                                     <input type="number" onChange={(event)=>{
-                                        setDoctor({...doctor,"emergencyContactNumber":event.target.value})
+                                        setDoctor({...patient,"emergencyContactNumber":event.target.value})
                                     }}/>
                                 </div>
                             }
