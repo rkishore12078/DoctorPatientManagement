@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box,Stack,TextField,Button,CircularProgress} from "@mui/material";
+import { Box,Stack,TextField,CircularProgress} from "@mui/material";
 import '../Css/Login.css'
 import { Link } from "react-router-dom";
 
@@ -9,9 +9,42 @@ function Login() {
 
     const[user,setUser]=useState(
         {
-            ""
+            "userId": 0,
+            "email": "",
+            "password": "",
+            "role": "",
+            "token": ""
         }
     )
+
+    var login=()=>
+    {
+        console.log(user);
+        fetch("http://localhost:5140/api/Hospital/Login",
+        {
+            "method":"POST",
+            headers:{
+                "accept": "text/plain",
+                "Content-Type": 'application/json'
+            },
+
+            "body":JSON.stringify({...user,"user":{} })
+        })
+        .then(async (data)=>
+        {
+            if(data.status == 200)
+            {
+                var myData = await data.json();
+                console.log(myData);
+                // navigate("/second/"+myData.gender)
+                
+            }
+        })
+        .catch((err)=>
+        {
+                console.log(err.error)
+        })
+    }
 
     return (
         <div>
@@ -24,7 +57,9 @@ function Login() {
                         variant="outlined"
                         title="Username"
                         name="username"
-                        // onChange={onChangeHandler}
+                        onChange={(event)=>{
+                            setUser({...user,"email":event.target.value})
+                        }}
                         placeholder="Enter Username"
 
                         fullWidth
@@ -35,7 +70,9 @@ function Login() {
                         label="Password"
                         name="password"
                         type="password"
-                        // onChange={onChangeHandler}
+                        onChange={(event)=>{
+                            setUser({...user,"password":event.target.value})
+                        }}
                         // helperText="Password must be atleast 6 characters length"
                         fullWidth
 
@@ -46,16 +83,16 @@ function Login() {
                             <CircularProgress />
                         </Box>
                     ) : (
-                        <Button className="button" variant="contained"
-                            // onClick={onSubmitHandler}
+                        <button className="btn btn-primary" variant="contained"
+                            onClick={login}
                             >
                             LOGIN
-                        </Button>
+                        </button>
                     )}
                     <p className="secondary-action">
                         Don't have an account?{" "}
 
-                        <Link to="register" >
+                        <Link className="link" to="/register" >
                             Register now
                         </Link>
                     </p>

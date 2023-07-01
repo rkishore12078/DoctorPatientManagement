@@ -3,6 +3,7 @@ using DoctorPatientAPI.Exceptions;
 using DoctorPatientAPI.Interfaces;
 using DoctorPatientAPI.Models;
 using DoctorPatientAPI.Models.DTOs;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -11,6 +12,7 @@ namespace DoctorPatientAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [EnableCors("ReactCors")]
     public class HospitalController : ControllerBase
     {
         private readonly IManageDoctor _doctorService;

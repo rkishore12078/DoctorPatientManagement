@@ -16,6 +16,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy("ReactCors", policy =>
+    {
+        policy.AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin();
+    });
+});
 
 builder.Services.AddDbContext<Context>
                (options => options.UseSqlServer(builder.Configuration.GetConnectionString("myConn")));
@@ -42,15 +51,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                        ValidateAudience = false
                    };
                });
-builder.Services.AddCors(opts =>
-{
-    opts.AddPolicy("MyCors", policy =>
-    {
-        policy.AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowAnyOrigin();
-    });
-});
 
 var app = builder.Build();
 
@@ -61,6 +61,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("ReactCors");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
