@@ -67,6 +67,7 @@ namespace DoctorPatientAPI.Adapters
             userDTO.Email = user.Email;
             userDTO.UserId = user.UserId;
             userDTO.Role = user.Role;
+            userDTO.Status = user.DoctorState;
             userDTO.Token = _tokenService.GenerateToken(userDTO);
             return userDTO;
         }

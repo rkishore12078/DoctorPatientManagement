@@ -52,7 +52,7 @@ namespace DoctorPatientAPI.Services
             return null;
         }
 
-        public async Task<User?> ChangeStatus(UserIdsDTO userID)
+        public async Task<UserDTO?> ChangeStatus(UserIdsDTO userID)
         {
             var user = await _userRepo.Get(userID.UserID);
             if (user != null)
@@ -64,7 +64,8 @@ namespace DoctorPatientAPI.Services
                 else
                     user.DoctorState = "Active";
                 var myUser=await _userRepo.Update(user);
-                return myUser;
+                UserDTO? userDTO = _adapter.UserIntoUserDTO(myUser);
+                return userDTO;
             }
             return null;   
         }
@@ -83,6 +84,14 @@ namespace DoctorPatientAPI.Services
                     return user;
                 }
             }
+            return null;
+        }
+
+        public async Task<User?> GetUser(UserIdsDTO userIds)
+        {
+            var user=await _userRepo.Get(userIds.UserID);
+            if (user != null)
+                return user;
             return null;
         }
     }

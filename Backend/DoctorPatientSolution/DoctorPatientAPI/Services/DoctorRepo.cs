@@ -65,10 +65,17 @@ namespace DoctorPatientAPI.Services
 
         public async Task<ICollection<Doctor>?> GetAll()
         {
-            var doctors = await _context.Doctors.ToListAsync();
-            if (doctors != null)
-                return doctors;
-            return null;
+            try
+            {
+                var doctors = await _context.Doctors.ToListAsync();
+                if (doctors != null)
+                    return doctors;
+                return null;
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
         }
 
         public async Task<Doctor?> Update(Doctor item)

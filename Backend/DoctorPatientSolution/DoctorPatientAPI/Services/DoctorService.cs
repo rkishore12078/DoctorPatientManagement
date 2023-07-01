@@ -29,8 +29,8 @@ namespace DoctorPatientAPI.Services
             doctorDTO.Users= _adapterDTO.DoctorIntoUser(doctorDTO);
             var doctor=await _doctorRepo.Add(doctorDTO);
             if (doctor == null) return null;
-            var userDTO=await _adapterDTO.DoctorIntoUserDTO(doctorDTO);
-            if(userDTO !=null) return userDTO;
+            var userDTO = await _adapterDTO.DoctorIntoUserDTO(doctorDTO);
+            if (userDTO != null) return userDTO;
             return null;
         }
 
@@ -70,6 +70,14 @@ namespace DoctorPatientAPI.Services
                 if(userDTO != null) 
                     return userDTO;
             }
+            return null;
+        }
+
+        public async Task<List<Doctor>?> GetAllDoctors()
+        {
+            var doctors = await _doctorRepo.GetAll();
+            if (doctors != null)
+                return doctors.ToList();
             return null;
         }
     }

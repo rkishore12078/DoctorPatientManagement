@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Box,Stack,TextField,CircularProgress} from "@mui/material";
 import '../Css/Login.css'
 import { Link, useNavigate } from "react-router-dom";
@@ -22,6 +22,13 @@ function Login(props) {
             "token": ""
         }
     )
+
+    useEffect(() => {
+        let ignore = false;
+        
+        if (!ignore)  removingLocalStorage()
+        return () => { ignore = true; }
+        },[]);
 
     var login=()=>
     {
@@ -76,6 +83,12 @@ function Login(props) {
         localStorage.setItem("token",myData.token);
         localStorage.setItem("role",myData.role);
         localStorage.setItem("userId",myData.userId);
+    }
+
+    var removingLocalStorage=()=>{
+        localStorage.clear("token");
+        localStorage.clear("role");
+        localStorage.clear("userId");
     }
 
     return (

@@ -3,6 +3,7 @@ using DoctorPatientAPI.Exceptions;
 using DoctorPatientAPI.Interfaces;
 using DoctorPatientAPI.Models;
 using DoctorPatientAPI.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -122,6 +123,8 @@ namespace DoctorPatientAPI.Controllers
             }
             return BadRequest(error);
         }
+
+        [Authorize(Roles ="Admin")]
         [HttpPut]
         [ProducesResponseType(typeof(User), StatusCodes.Status201Created)]//Success Response
         [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
@@ -146,11 +149,12 @@ namespace DoctorPatientAPI.Controllers
             return BadRequest(error);
         }
 
+        [Authorize]
         [HttpPut]
         [ProducesResponseType(typeof(User), StatusCodes.Status201Created)]//Success Response
         [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<User?>> UpdatePassword(PasswordDTO passwordDTO)
+        public async Task<ActionResult<UserDTO?>> UpdatePassword(PasswordDTO passwordDTO)
         {
             try
             {
@@ -170,6 +174,7 @@ namespace DoctorPatientAPI.Controllers
             return BadRequest(error);
         }
 
+        [Authorize(Roles ="Doctor")]
         [HttpPut]
         public async Task<ActionResult<UserDTO?>> UpdateDoctorDetails(DoctorDTO doctorDTO)
         {
@@ -177,6 +182,53 @@ namespace DoctorPatientAPI.Controllers
             if(doctor!=null)
                 return Ok(doctor);
             return BadRequest("Error");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]//Success Response
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<User?>> GetUser(UserIdsDTO userIds)
+        {
+            try
+            {
+                var user = await _userService.GetUser(userIds);
+                if (user != null) return Ok(user);
+                error.ID = 404;
+                error.Message = new Messages().messages[1];
+            }
+            catch (Exception)
+            {
+                error.ID = 400;
+                error.Message = new Messages().messages[8];
+                _logger.LogError(error.Message);
+            }
+            return BadRequest(error);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(List<Doctor>), StatusCodes.Status200OK)]//Success Response
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<List<Doctor>?>> GetAllDoctors()
+        {
+            try
+            {
+                var doctors = await _doctorService.GetAllDoctors();
+                if (doctors != null)
+                    return Ok(doctors);
+                error.ID = 404;
+                error.Message = new Messages().messages[3];
+            }
+            catch (Exception)
+            {
+                error.ID = 400;
+                error.Message = new Messages().messages[8];
+                _logger.LogError(error.Message);
+            }
+            return BadRequest(error);
         }
     }
 }

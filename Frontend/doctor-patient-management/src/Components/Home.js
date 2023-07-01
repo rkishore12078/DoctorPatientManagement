@@ -1,6 +1,8 @@
 function Home()
 {
-    return(
+    localStorage.clear("role");
+
+    return(    
         <div>
 
         </div>

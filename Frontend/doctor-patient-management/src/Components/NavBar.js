@@ -1,11 +1,31 @@
 import 'bootstrap/dist/css/bootstrap.css'
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import '../Css/NavBar.css'
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-function NavBar(){
+function NavBar(props){
+
+    var [roles,setRole]=useState('');
+    const users=useSelector((state)=>state.users);
+    
+
+    useEffect(() => {
+        let ignore = false;
+        
+        if (!ignore)  settingRole()
+        return () => { ignore = true; }
+        },[]);
+
+    var settingRole=()=>
+    {
+        // setUser(users[0]);
+        // localStorage.getItem("role")!=null?(setRole(localStorage.getItem("role"))):(setRole(''));
+    }
+
     return(
         <div>
+            {/* {settingRole()} */}
             <div className="nav">
                 <input type="checkbox" id="nav-check"/>
                 <div className="nav-header">
@@ -22,11 +42,38 @@ function NavBar(){
                 </div>
                 
                 <div className="nav-links">
-                    <Link to='/login'>Login</Link>
-                    <a href="http://stackoverflow.com/users/4084003/" target="_blank">Stackoverflow</a>
-                    <a href="https://in.linkedin.com/in/jonesvinothjoseph" target="_blank">LinkedIn</a>
-                    <a href="https://codepen.io/jo_Geek/" target="_blank">Codepen</a>
-                    <a href="https://jsfiddle.net/user/jo_Geek/" target="_blank">JsFiddle</a>
+                    { roles==""?(
+                    <div>
+                        <Link to='/login'>Login</Link>
+                        <Link to='/register'>Register</Link>
+                    </div>
+                    ):(
+                        <div>
+                            { roles=="Admin"?(
+                                <div>
+                                    <Link to='adminPage'>Home</Link>
+                                    <Link to='/logout'>Logout</Link>
+                                </div>
+                            ):(
+                                <div>
+                                    {roles=="Doctor"?
+                                        (<div>
+                                            <Link to='doctorPage'>Home</Link>
+                                            <Link to='doctorPage'  >Home</Link>
+                                            <Link>Update Details</Link>
+                                            <Link to='/logout'>Logout</Link>
+                                        </div>):(<div>
+                                            <Link to='patientPage'>Home</Link>
+                                            <Link>Update Details</Link>
+                                            <Link to='/logout'>Logout</Link>
+                                        </div>)
+                                    }
+                                </div>
+                            )
+                            }
+                        </div>
+                    )
+                    }
                 </div>
             </div>
         </div>

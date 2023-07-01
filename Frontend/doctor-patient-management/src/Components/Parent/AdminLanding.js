@@ -1,4 +1,4 @@
-function AllDoctors()
+function AdminLanding()
 {
     return(
         <div>
@@ -6,4 +6,4 @@ function AllDoctors()
         </div>
     )
 }
-export default AllDoctors;
+export default AdminLanding;
