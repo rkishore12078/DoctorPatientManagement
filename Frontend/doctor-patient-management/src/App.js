@@ -10,6 +10,8 @@ import DoctorProtected from './Components/Protected/DoctorProtected';
 import PatientProtected from './Components/Protected/PatientProtected';
 import DoctorLanding from './Components/Parent/DoctorLanding';
 import Logout from './Components/Logout';
+import PatientLanding from './Components/Parent/PatientLanding';
+import PatientUpdate from './Components/Parent/PatientUpdate';
 
 
 function App() {
@@ -39,10 +41,11 @@ function App() {
 
           <Route path='/patientPage' element={
           < PatientProtected token={token}>
-            
+            <PatientLanding/>
           </PatientProtected>
           }/>
 
+          <Route path='profile' element={<PatientUpdate/>}/>
           <Route path='logout' element={<Logout/>}/>
 
         </Routes>

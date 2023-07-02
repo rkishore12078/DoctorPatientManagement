@@ -1,3 +1,4 @@
+import PatientDoctor from "./Child/PatientDoctor";
 import NavBar from "./NavBar";
 import { useState } from "react";
 
@@ -16,6 +17,7 @@ function Home()
     return(    
         <div>
             <NavBar user={user}/>
+            {/* <PatientDoctor/> */}
         </div>
     )
 }

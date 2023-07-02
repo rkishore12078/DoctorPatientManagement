@@ -50,5 +50,13 @@ namespace DoctorPatientAPI.Services
             // Check if the character is in the set of special characters
             return specialCharacters.Contains(c);
         }
+
+        public async Task<Patient?> GetPatient(UserIdsDTO userId)
+        {
+            var patient = await _patientRepo.Get(userId.UserID);
+            if(patient!=null)
+                return patient;
+            return null;
+        }
     }
 }

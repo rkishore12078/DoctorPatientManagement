@@ -95,5 +95,13 @@ namespace DoctorPatientAPI.Services
                 return user;
             return null;
         }
+
+        public async Task<List<User>?> GetAllUsers()
+        {
+            var users = await _userRepo.GetAll();
+            if (users != null)
+                return users.ToList();
+            return null;
+        }
     }
 }

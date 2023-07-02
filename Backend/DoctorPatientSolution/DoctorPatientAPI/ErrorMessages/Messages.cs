@@ -19,7 +19,8 @@
                 "Unable to Update the Patient",
                 "Unable to Change status",
                 "Email and PhoneNumber should be unique",
-                "Unable to Update Password"
+                "Unable to Update Password",
+                "Unable to fetch specializations"
             };
         }
     }

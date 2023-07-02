@@ -115,5 +115,18 @@ namespace DoctorPatientAPI.Services
             if(doctorFilters != null) return doctorFilters;
             return null;
         }
+
+        public async Task<List<string>?> Specializations()
+        {
+            List<string>? specializations= new List<string>();
+            var doctors=await _doctorRepo.GetAll();
+            if (doctors != null)
+            {
+                specializations = doctors.Select(d=>d.Specialization).Distinct().ToList();
+                if(specializations!=null)
+                    return specializations;
+            }
+            return null;
+        }
     }
 }

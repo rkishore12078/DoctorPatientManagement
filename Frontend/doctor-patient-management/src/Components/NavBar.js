@@ -46,7 +46,7 @@ function NavBar(props){
                                             <Link className='a' to='/logout'>Logout</Link>
                                         </div>):(<div className="nav-links">
                                             <Link className='a' to='patientPage'>Home</Link>
-                                            <Link className='a'>Update Details</Link>
+                                            <Link className='a'to='/profile'>Update Details</Link>
                                             <Link className='a' to='/logout'>Logout</Link>
                                         </div>)
                                     }

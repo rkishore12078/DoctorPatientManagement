@@ -212,7 +212,7 @@ namespace DoctorPatientAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [ProducesResponseType(typeof(List<Doctor>), StatusCodes.Status200OK)]//Success Response
         [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -270,6 +270,78 @@ namespace DoctorPatientAPI.Controllers
                 return Ok(doctors);
             error.ID = 404;
             error.Message = new Messages().messages[2];
+            }
+            catch (Exception)
+            {
+                error.ID = 400;
+                error.Message = new Messages().messages[8];
+                _logger.LogError(error.Message);
+            }
+            return BadRequest(error);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]//Success Response
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<List<User>?>> GetAllUsers()
+        {
+            try
+            {
+                var users = await _userService.GetAllUsers();
+                if (users != null)
+                    return Ok(users);
+                error.ID = 404;
+                error.Message = new Messages().messages[1];
+            }
+            catch (Exception)
+            {
+                error.ID = 400;
+                error.Message = new Messages().messages[8];
+                _logger.LogError(error.Message);
+            }
+            return BadRequest(error);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]//Success Response
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<List<string>?>> Specializations()
+        {
+            try
+            {
+                var specializations=await _doctorService.Specializations();
+                if(specializations != null)
+                    return Ok(specializations);
+                error.ID = 404;
+                error.Message = new Messages().messages[14];
+            }
+            catch (Exception)
+            {
+                error.ID = 400;
+                error.Message = new Messages().messages[8];
+                _logger.LogError(error.Message);
+            }
+            return BadRequest(error);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Patient")]
+        [ProducesResponseType(typeof(Doctor), StatusCodes.Status200OK)]//Success Response
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Patient?>> GetPatient(UserIdsDTO userIds)
+        {
+            try
+            {
+
+                var patient = await _patientService.GetPatient(userIds);
+                if (patient != null)
+                    return Ok(patient);
+                error.ID = 404;
+                error.Message = new Messages().messages[3];
             }
             catch (Exception)
             {

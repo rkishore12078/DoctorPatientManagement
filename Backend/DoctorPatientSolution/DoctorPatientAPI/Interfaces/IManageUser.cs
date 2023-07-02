@@ -9,5 +9,6 @@ namespace DoctorPatientAPI.Interfaces
         public Task<UserDTO?> ChangeStatus(UserDTO userDTO);
         public Task<User?> UpdatePassword(PasswordDTO passwordDTO);
         public Task<User?> GetUser(UserIdsDTO userIds);
+        public Task<List<User>?> GetAllUsers();
     }
 }
