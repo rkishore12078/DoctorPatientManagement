@@ -80,5 +80,13 @@ namespace DoctorPatientAPI.Services
                 return doctors.ToList();
             return null;
         }
+
+        public async Task<Doctor?> GetDoctor(UserIdsDTO userIds)
+        {
+            var doctor = await _doctorRepo.Get(userIds.UserID);
+            if(doctor != null)
+                return doctor;
+            return null;
+        }
     }
 }

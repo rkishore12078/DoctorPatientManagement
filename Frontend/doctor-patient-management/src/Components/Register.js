@@ -1,7 +1,8 @@
 import React, { useState ,useRef} from "react";
 import '../Css/Register.css'
 import { useDispatch } from "react-redux";
-import { addUser } from "../HospitalSlice";
+import { addUser } from "../HospitalSlice"
+import NavBar from "./NavBar";
 
 
 
@@ -56,6 +57,16 @@ function Register() {
         }
     )
 
+    const[user,setUser]=useState(
+        {
+            "userId": 0,
+            "email": "",
+            "password": "",
+            "role": "",
+            "token": ""
+        }
+    )
+
     var doctorRegister=()=>
     {
         console.log(doctor);
@@ -76,9 +87,7 @@ function Register() {
                 myData = await data.json();
                 dispatch(addUser(myData));
                 settingLocalStorage();
-                console.log(myData);
-                // navigate("/second/"+myData.gender)
-                
+                console.log(myData);                
             }
             else
             {
@@ -144,12 +153,14 @@ function Register() {
 
     return (
         <div>
+            <NavBar user={user}/>
+
             <div>
 
-                <select onChange={(event)=>{
+                <select defaultValue={'DEFAULT'} onChange={(event)=>{
                     setRole(event.target.value)
                 }}>
-                    <option value="none" defaultValue disabled hidden>Select</option>
+                    <option value="DEFAULT" disabled>Choose....</option>
                     <option value='doctor'>doctor</option>
                     <option value='patient'>patient</option>
                 </select>
@@ -183,11 +194,11 @@ function Register() {
                     setPatient({...patient,"dateOfBirth":event.target.value})
                 }}/>
 
-                <select onChange={(event)=>{
+                <select defaultValue={'DEFAULT'} onChange={(event)=>{
                     setDoctor({...doctor,"gender":event.target.value})
                     setPatient({...patient,"gender":event.target.value})
                 }}>
-                    <option value="none" defaultValue disabled hidden>Select</option>
+                    <option value="DEFAULT" disabled>Select...</option>
                     <option value='Male'>Male</option>
                     <option value='Female'>Female</option>
                     <option value='Others'>Others</option>

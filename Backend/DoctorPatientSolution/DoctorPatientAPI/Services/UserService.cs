@@ -52,20 +52,21 @@ namespace DoctorPatientAPI.Services
             return null;
         }
 
-        public async Task<UserDTO?> ChangeStatus(UserIdsDTO userID)
+        public async Task<UserDTO?> ChangeStatus(UserDTO userDTO)
         {
-            var user = await _userRepo.Get(userID.UserID);
+            var user = await _userRepo.Get(userDTO.UserId);
             if (user != null)
             {
-                if (user.DoctorState == "Inactive")
-                    user.DoctorState = "Active";
-                else if (user.DoctorState == "Active")
-                    user.DoctorState = "Inactive";
-                else
-                    user.DoctorState = "Active";
+                //if (user.DoctorState == "Not Approve")
+                //    user.DoctorState = "Approved";
+                //else if (user.DoctorState == "Approved")
+                //    user.DoctorState = "Not Approve";
+                //else
+                //    user.DoctorState = "Not Approve";
+                user.DoctorState = userDTO.Status;
                 var myUser=await _userRepo.Update(user);
-                UserDTO? userDTO = _adapter.UserIntoUserDTO(myUser);
-                return userDTO;
+                UserDTO? result = _adapter.UserIntoUserDTO(myUser);
+                return result;
             }
             return null;   
         }

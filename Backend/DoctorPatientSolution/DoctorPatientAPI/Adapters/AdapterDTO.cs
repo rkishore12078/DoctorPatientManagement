@@ -24,7 +24,7 @@ namespace DoctorPatientAPI.Adapters
             doctorDTO.Users.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(doctorDTO.Password ?? "1234"));
             doctorDTO.Users.PasswordKey = hmac.Key;
             doctorDTO.Users.Role = "Doctor";
-            doctorDTO.Users.DoctorState = "Inactive";
+            doctorDTO.Users.DoctorState = "Not Approve";
             return doctorDTO.Users;
         }
         public User? PatientIntoUser(PatientDTO patientDTO)

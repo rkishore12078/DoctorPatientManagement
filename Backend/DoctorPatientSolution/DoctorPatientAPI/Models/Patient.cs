@@ -25,7 +25,7 @@ namespace DoctorPatientAPI.Models
                     year--;
                 return year;
             }
-            set { Age = value; } 
+             
         }
         public string? Gender { get; set; }
         public string? Phone { get; set; }

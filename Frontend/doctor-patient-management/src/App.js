@@ -8,32 +8,17 @@ import AdminLanding from './Components/Parent/AdminLanding'
 import AdminProtected from './Components/Protected/AdminProtected';
 import DoctorProtected from './Components/Protected/DoctorProtected';
 import PatientProtected from './Components/Protected/PatientProtected';
-import Doctor from './Components/Child/Doctor';
-import { useState } from 'react';
+import DoctorLanding from './Components/Parent/DoctorLanding';
 
 
-function App(props) {
+function App() {
 
   var token;
 
-  const[user,setUser]=useState({
-    "userId": 0,
-    "email": "",
-    "password": "",
-    "role": "",
-    "token": ""
-})
-
-  // var populate=(newUser)=>
-  // {
-  //   props.newUser;
-  // }
 
   return (
     <div className="App">
       <BrowserRouter>
-        <NavBar />
-        <Doctor/>
         <Routes>
           <Route path='/' element={<Home/>}/>
           <Route path='login' element={<Login/>}/>
@@ -41,13 +26,13 @@ function App(props) {
 
           <Route path='/adminPage' element={
           <AdminProtected token={token}>
-            
+            <AdminLanding/>
           </AdminProtected>
           }/>
 
           <Route path='/doctorPage' element={
           <DoctorProtected token={token}>
-            <AdminLanding/>
+            <DoctorLanding/>
           </DoctorProtected>
           }/>
 

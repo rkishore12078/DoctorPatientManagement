@@ -35,14 +35,25 @@
     font-size: 18px;
   }
   
-  .nav > .nav-links > a {
+  .nav > .nav-links >  .summa>.a{
     display: inline-block;
     padding: 13px 10px 13px 10px;
     text-decoration: none;
     color: #efefef;
   }
   
-  .nav > .nav-links > a:hover {
+  .nav > .nav-links > .summa>.a:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .nav > .nav-links >  .summa>.summa1>.a{
+    display: inline-block;
+    padding: 13px 10px 13px 10px;
+    text-decoration: none;
+    color: #efefef;
+  }
+  
+  .nav > .nav-links > .summa>.summa1>.a:hover {
     background-color: rgba(0, 0, 0, 0.3);
   }
   

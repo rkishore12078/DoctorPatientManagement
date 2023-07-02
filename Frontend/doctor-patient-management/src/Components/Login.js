@@ -4,8 +4,9 @@ import '../Css/Login.css'
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../HospitalSlice";
+import NavBar from "./NavBar";
 
-function Login(props) {
+function Login() {
 
     var [loading,setLoading]=useState(false);
     var dispatch=useDispatch();
@@ -51,6 +52,7 @@ function Login(props) {
                 myData = await data.json();
                 dispatch(addUser(myData));
                 settingLocalStorage();
+                // setUser({...user,"role":localStorage.getItem('role')});
                 decide();
                 console.log(myData);
             }
@@ -71,18 +73,18 @@ function Login(props) {
 
     var decide=()=>
     {
-        if(myData.role=="Admin")
+        if(myData.role==="Admin")
             navigate('/adminPage');
-        else if(myData.role=="Doctor")
+        else if(myData.role==="Doctor")
             navigate('/doctorPage');
-        else if(myData.role="Patient")
+        else if(myData.role==="Patient")
             navigate('/patientPage');
     }
 
     var settingLocalStorage=()=>{
-        localStorage.setItem("token",myData.token);
-        localStorage.setItem("role",myData.role);
-        localStorage.setItem("userId",myData.userId);
+        localStorage.setItem('token',myData.token);
+        localStorage.setItem('role',myData.role);
+        localStorage.setItem('userId',myData.userId);
     }
 
     var removingLocalStorage=()=>{
@@ -93,6 +95,7 @@ function Login(props) {
 
     return (
         <div>
+            <NavBar user={user}/>
             <Box className="content">
                 <Stack spacing={2} className="form">
                     <h2 className="title">Login</h2>
