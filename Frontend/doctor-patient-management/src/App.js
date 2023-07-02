@@ -9,6 +9,7 @@ import AdminProtected from './Components/Protected/AdminProtected';
 import DoctorProtected from './Components/Protected/DoctorProtected';
 import PatientProtected from './Components/Protected/PatientProtected';
 import DoctorLanding from './Components/Parent/DoctorLanding';
+import Logout from './Components/Logout';
 
 
 function App() {
@@ -41,6 +42,8 @@ function App() {
             
           </PatientProtected>
           }/>
+
+          <Route path='logout' element={<Logout/>}/>
 
         </Routes>
       </BrowserRouter>

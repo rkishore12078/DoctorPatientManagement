@@ -22,12 +22,14 @@ function PatientLanding()
 
     var getDoctors=()=>
     {
+
     }
 
     
     return(
         <div>
             <NavBar user={user}/>
+            
         </div>
     )
 }

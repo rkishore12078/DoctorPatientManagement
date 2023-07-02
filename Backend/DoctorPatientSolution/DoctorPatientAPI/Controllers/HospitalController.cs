@@ -262,6 +262,22 @@ namespace DoctorPatientAPI.Controllers
         [ProducesResponseType(typeof(Doctor), StatusCodes.Status200OK)]//Success Response
         [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<List<Doctor>?>>
+        public async Task<ActionResult<List<Doctor>?>> DoctorFilters(Status status)
+        {
+            try{
+            var doctors=await _doctorService.DoctorFilters(status);
+            if(doctors != null)
+                return Ok(doctors);
+            error.ID = 404;
+            error.Message = new Messages().messages[2];
+            }
+            catch (Exception)
+            {
+                error.ID = 400;
+                error.Message = new Messages().messages[8];
+                _logger.LogError(error.Message);
+            }
+            return BadRequest(error);
+        }
     }
 }

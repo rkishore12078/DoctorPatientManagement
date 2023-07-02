@@ -9,14 +9,17 @@ namespace DoctorPatientAPI.Services
         private readonly IRepo<Doctor, int> _doctorRepo;
         private readonly IPasswordGenerate _doctorPassword;
         private readonly IAdapterDTO _adapterDTO;
+        private readonly IRepo<User, int> _userRepo;
 
         public DoctorService(IRepo<Doctor,int> doctorRepo,
                              IPasswordGenerate doctorPassword,
-                             IAdapterDTO adapterDTO)
+                             IAdapterDTO adapterDTO,
+                             IRepo<User,int> userRepo)
         {
             _doctorRepo= doctorRepo;
             _doctorPassword= doctorPassword;
             _adapterDTO= adapterDTO;
+            _userRepo= userRepo;
         }
 
         public async Task<UserDTO?> DoctorRegister(DoctorDTO doctorDTO)
@@ -86,6 +89,30 @@ namespace DoctorPatientAPI.Services
             var doctor = await _doctorRepo.Get(userIds.UserID);
             if(doctor != null)
                 return doctor;
+            return null;
+        }
+        public async Task<List<Doctor>?> DoctorFilters(Status status)
+        {
+            List<int> ids = new List<int>();
+            List<Doctor>? doctorFilters= new List<Doctor>();
+            var users=await _userRepo.GetAll();
+            if (users != null)
+            {
+                foreach (var user in users)
+                {
+                    if (user.DoctorState == status.DoctorState)
+                        ids.Add(user.UserId);
+                }
+            }
+            var doctors =await _doctorRepo.GetAll();
+            if (doctors != null)
+            {
+                foreach (var value in ids)
+                {
+                    doctorFilters.Add(doctors.SingleOrDefault(d => d.DoctorId == value));
+                }
+            }
+            if(doctorFilters != null) return doctorFilters;
             return null;
         }
     }
