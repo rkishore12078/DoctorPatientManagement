@@ -1,4 +1,5 @@
 import { useState } from "react";
+import '../../Css/PatientDoctor.css'
 
 function PatientDoctor(props)
 {
@@ -6,14 +7,14 @@ function PatientDoctor(props)
 
 
     return(
-        <tr>
-            <td>{doctor.name}</td>
-            <td>{doctor.age}</td>
-            <td>{doctor.gender}</td>
-            <td>{doctor.phone}</td>
-            <td>{doctor.specialization}</td>
-            <td>{doctor.qualification}</td>
-            <td>{doctor.yearsOfExperience}</td>
+        <tr className="tbl-row">
+            <td className="tbl-col">{doctor.name}</td>
+            <td className="tbl-col">{doctor.age}</td>
+            <td className="tbl-col">{doctor.gender}</td>
+            <td className="tbl-col">{doctor.phone}</td>
+            <td className="tbl-col">{doctor.specialization}</td>
+            <td className="tbl-col">{doctor.qualification}</td>
+            <td className="tbl-col">{doctor.yearsOfExperience}</td>
         </tr>
     )
 }

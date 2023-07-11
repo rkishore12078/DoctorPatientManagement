@@ -1,0 +1,67 @@
+.out-container{
+    background-image: url("../assets/images/register.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height:100%;
+    height:100vh;
+}
+
+.containers{
+    background-color:transparent;
+    border-radius: 10px;
+    padding: 2rem;
+    width:500px;
+    margin: 2rem;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.topic{
+    font-weight: bold;
+    color:green;
+    font-size: 30px;
+}
+
+.input{
+    width:100%;
+    margin:5px 0;
+    font-weight: 500;
+    /* height:40px; */
+    outline: none;
+    border-color: black;
+    border-radius: 30px;
+}
+
+.passwords{
+    color: red;
+    font-size: small;
+}
+
+.input:focus{
+    border-style: hidden;
+    border:none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.titles{
+    color:rgb(128, 128, 0);
+}
+
+.buttton{
+    margin-top: 20px;
+}
+
+@media screen and (min-width: 768px) {
+    .out-container {
+        justify-content: flex-start;
+    }
+
+    .container {
+        min-width: 24rem;
+    }
+}
+
+

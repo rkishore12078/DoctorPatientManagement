@@ -2,8 +2,8 @@
 {
     public class InvalidSqlException:Exception
     {
-        public string message;
-        public int number;
+        public string message="";
+        public int number=0;
         public InvalidSqlException()
         {
             message = "Exceptions";
@@ -12,10 +12,11 @@
         {
             this.message = message;
         }
-        public InvalidSqlException(int number)
+        public InvalidSqlException(int? number)
         {
-            this.number = number;
+            this.number = number ?? 0;
         }
+
         public override string Message
         {
             get { return message; }

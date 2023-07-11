@@ -22,10 +22,15 @@ namespace DoctorPatientAPI.Services
             var transaction = _context.Database.BeginTransaction();
             try
             {
-                transaction.CreateSavepoint("Doctor");
-                await _userRepo.Add(item.Users);
+                //transaction.CreateSavepoint("Doctor");
+                var doctor = item.Users;
+                if (doctor == null) return null;
+                await _userRepo.Add(doctor);
+                if(_context.Users==null) return null;
                 var user = _context.Users.OrderByDescending(u => u.UserId).FirstOrDefault();
+                if(user == null) return null;
                 item.DoctorId = user.UserId;
+                if(_context.Doctors==null) return null;
                 _context.Doctors.Add(item);
                 await _context.SaveChangesAsync();
                 transaction.Commit();
@@ -33,25 +38,32 @@ namespace DoctorPatientAPI.Services
             }
             catch (SqlException ex)
             {
-                transaction.RollbackToSavepoint("Doctor");
+                transaction.Rollback();
                 throw new InvalidSqlException(ex.Number);
             }
             catch (Exception)
             {
-                transaction.RollbackToSavepoint("Doctor");
+                transaction.Rollback();
             }
             return null;
         }
 
-        public Task<Doctor?> Delete(int id)
+        public async Task<Doctor?> Delete(int id)
         {
-            throw new NotImplementedException();
+            if(_context.Doctors==null) return null;
+            var doctor=await _context.Doctors.SingleOrDefaultAsync(d=>d.DoctorId==id);
+            if (doctor != null)
+            {
+                return doctor;
+            }
+            return null;
         }
 
         public async Task<Doctor?> Get(int id)
         {
             try
             {
+                if(_context.Doctors == null) return null;
                 var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.DoctorId == id);
                 if (doctor != null)
                     return doctor;
@@ -67,6 +79,7 @@ namespace DoctorPatientAPI.Services
         {
             try
             {
+                if (_context.Doctors == null) return null;
                 var doctors = await _context.Doctors.ToListAsync();
                 if (doctors != null)
                     return doctors;

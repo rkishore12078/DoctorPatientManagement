@@ -1,4 +1,4 @@
-import { useState,useEffect, useCallback} from "react";
+import { useState,useEffect} from "react";
 import '../../Css/Doctor.css';
 
 function Doctor(props)
@@ -27,6 +27,7 @@ function Doctor(props)
     );
 
     const[status,setStatus]=useState('');
+    setStatus('kannaappan');
 
     useEffect(() => {
         let ignore = false;
@@ -36,8 +37,9 @@ function Doctor(props)
         },[]);
 
     var fetchUser=()=>{
-        Id.userID=Number(doctor.doctorId);
-        console.log(Id.userID);
+        // setId({"userID":doctor.doctorId});
+        Id.userID=doctor.doctorId;
+        console.log(Id);
         fetch("http://localhost:5140/api/Hospital/GetUser",
         {
             "method":"POST",
@@ -97,58 +99,54 @@ function Doctor(props)
 
 
     return(
-        <div>
-            <table>
-                <tbody>
-                    <tr>
-                        <td>Name</td>
-                        <td>{doctor.name}</td>
+        <div className="doctor">
+            <table className="table-container">
+                <tbody className="table-body">
+                    <tr className="table-row">
+                        <td className="table-col">Name</td>
+                        <td className="table-col">{doctor.name}</td>
                     </tr>
-                    <tr>
-                        <td>Phone</td>
-                        <td>{doctor.phone}</td>
+                    <tr className="table-row">
+                        <td className="table-col">Phone</td>
+                        <td className="table-col">{doctor.phone}</td>
                     </tr>
-                    <tr>
-                        <td>Age</td>
-                        <td>{doctor.age}</td>
+                    <tr className="table-row">
+                        <td className="table-col">Age</td>
+                        <td className="table-col">{doctor.age}</td>
                     </tr>
-                    <tr>
-                        <td>Specilization</td>
-                        <td>{doctor.specialization}</td>
+                    <tr className="table-row">
+                        <td className="table-col">Specilization</td>
+                        <td className="table-col">{doctor.specialization}</td>
                     </tr>
-                    <tr>
-                        <td>Qualification</td>
-                        <td>{doctor.qualification}</td>
+                    <tr className="table-row">
+                        <td className="table-col">Qualification</td>
+                        <td className="table-col">{doctor.qualification}</td>
                     </tr>
-                    <tr>
-                        <td>Experience</td>
-                        <td>{doctor.yearsOfExperience}</td>
+                    <tr className="table-row">
+                        <td className="table-col">Experience</td>
+                        <td className="table-col">{doctor.yearsOfExperience}</td>
                     </tr>
-                    <tr>
-                        <td>Status</td>
-                        <td>{status}</td>
+                    <tr className="table-row">
+                        <td className="table-col">Status</td>
+                        <td className="table-col">{status}</td>
                     </tr>
                     {
                         status=="Not Approve"?
                         (
-                            <tr>
-                                <td><input value='Approved' onClick={ChangeStatus} className="btn btn-success"/></td>
-                                <td><input value='Denied' onClick={ChangeStatus} className="btn btn-danger"/></td>
+                            <tr className="table-row">
+                                <td className="table-col"><input value='Approved' onClick={ChangeStatus} className="btn btn-success button"/></td>
+                                <td className="table-col"><input value='Denied' onClick={ChangeStatus} className="btn btn-danger button"/></td>
                             </tr>
                         ):( status=="Approved"?(
-                            <div>
-                                <tr>
-                                    <td><input value='Approved' disabled className="btn btn-success"/></td>
-                                    <td><input value='Denied' onClick={ChangeStatus} className="btn btn-danger"/></td>
+                                <tr className="table-row">
+                                    <td className="table-col"><input value='Approved' disabled className="btn btn-success button"/></td>
+                                    <td className="table-col"><input value='Denied' onClick={ChangeStatus} className="btn btn-danger button"/></td>
                                 </tr>
-                            </div>
                         ):(
-                            <div>
-                                <tr>
-                                    <td><input value='Approved' onClick={ChangeStatus} className="btn btn-success"/></td>
-                                    <td><input value='Denied' disabled className="btn btn-danger"/></td>
+                                <tr className="table-row">
+                                    <td className="table-col"><input value='Approved' onClick={ChangeStatus} className="btn btn-success button"/></td>
+                                    <td className="table-col"><input value='Denied' disabled className="btn btn-danger button"/></td>
                                 </tr>
-                            </div>
                         ) 
                         )
                     }

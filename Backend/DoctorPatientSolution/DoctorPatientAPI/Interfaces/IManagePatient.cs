@@ -7,5 +7,6 @@ namespace DoctorPatientAPI.Interfaces
     {
         public Task<UserDTO?> PatientRegister(PatientDTO patientDTO);
         public Task<Patient?> GetPatient(UserIdsDTO userId);
+        public Task<UserDTO?> UpdatePatient(PatientDTO patientDTO);
     }
 }

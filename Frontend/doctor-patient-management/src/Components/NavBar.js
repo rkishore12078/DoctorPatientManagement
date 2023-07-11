@@ -34,19 +34,19 @@ function NavBar(props){
                         <div className='summa'>
                             { user.role==="Admin"?(
                                 <div className="summa1">
-                                    <Link className='a' to='adminPage'>Home</Link>
+                                    <Link className='a' to='/adminPage'>Home</Link>
                                     <Link className='a' to='/logout'>Logout</Link>
                                 </div>
                             ):(
-                                <div className='summa'>
+                                <div className='summa1'>
                                     {user.role==="Doctor"?
-                                        (<div className="summa1">
-                                            <Link className='a' to='doctorPage'>Home</Link>
-                                            <Link className='a'>Update Details</Link>
+                                        (<div className="summa2">
+                                            <Link className='a' to='/doctorPage'>Home</Link>
+                                            {/* <Link className='a'>Update Details</Link> */}
                                             <Link className='a' to='/logout'>Logout</Link>
-                                        </div>):(<div className="nav-links">
-                                            <Link className='a' to='patientPage'>Home</Link>
-                                            <Link className='a'to='/profile'>Update Details</Link>
+                                        </div>):(<div className="summa3">
+                                            <Link className='a' to='/patientPage'>Home</Link>
+                                            <Link className='a'to='/profile'>Profile</Link>
                                             <Link className='a' to='/logout'>Logout</Link>
                                         </div>)
                                     }

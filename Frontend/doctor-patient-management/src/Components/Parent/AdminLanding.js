@@ -2,16 +2,21 @@ import { useState, useEffect } from "react";
 import Doctor from "../Child/Doctor";
 import '../../Css/AdminLanding.css'
 import NavBar from "../NavBar";
+import {toast } from 'react-toastify';
+
 
 function AdminLanding() {
 
     const [doctors, setDoctors] = useState([]);
     const [error, setError] = useState(null);
+    const[search,setSerach]=useState('');
     const[enteredStatus,setEnteredStatus]=useState(
         {
             "doctorState": ""
         }
     );
+
+    const[pencils,setPencils]=useState([]);
 
     const [user, setUser] = useState(
         {
@@ -39,12 +44,11 @@ function AdminLanding() {
                     "Content-Type": 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
-
             })
             .then(async (data) => {
                 if (data.status == 200) {
                     setDoctors(await data.json());
-                    console.log(doctors);
+                    // console.log(doctors);
                 }
             })
             .catch((err) => {
@@ -57,7 +61,10 @@ function AdminLanding() {
     }
 
     var doctorFilter=(event)=>{
+        setDoctors([]);
         enteredStatus.doctorState=event.target.value;
+        //setEnteredStatus({...enteredStatus,"doctorState":event.target.value})
+        console.log(enteredStatus);
         if(enteredStatus.doctorState=="All")
             getAllDoctors();
         else{
@@ -70,14 +77,21 @@ function AdminLanding() {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
 
-            "body":JSON.stringify({...enteredStatus})
+            "body":JSON.stringify({ ...enteredStatus,"enteredStatus":{}})
         })
         .then(async (data)=>
         {
             if(data.status == 200)
             {
-                setDoctors(await data.json());
+                var myData=await data.json();
+                console.log(myData)
+                setDoctors(myData);
                 console.log(doctors);
+            }
+            else{
+                var newData=await data.json();
+                if(newData.id==404)
+                    toast.warning('No Doctors found');
             }
         })
         .catch((err)=>
@@ -89,39 +103,36 @@ function AdminLanding() {
 
 
     return (
-        <div>
+        <div className="AdminLanding premthelegend">
             <NavBar user={user} />
-            <div>
-                <label>
-                    <input
+            <input id="search-input" className="inputs" placeholder="Search here.." onChange={(event)=>{
+                setSerach(event.target.value)
+            }}/>
+            <div className="radio-buttons">
+                <label className="lbl">
+                    <input className="radio"
                         type="radio"
                         value="All"
                         name="options"
-                        readOnly
-                        // checked={selectedOption === 'option2'}
                         onChange={doctorFilter}
                     />
                     All
                 </label>
-                <label>
-                    <input
-                        readOnly
+                <label className="lbl">
+                    <input className="radio"
                         type="radio"
                         value="Approved"
                         name="options"
-                        // checked={selectedOption === 'Approved'}
                         onChange={doctorFilter}
                     />
                     Approved
                 </label>
 
-                <label>
-                    <input
-                        readOnly
+                <label className="lbl">
+                    <input className="radio"
                         type="radio"
                         value="Denied"
                         name="options"
-                        // checked={selectedOption === 'option2'}
                         onChange={doctorFilter}
                     />
                     Denied
@@ -129,9 +140,14 @@ function AdminLanding() {
             </div>
             <div className="GetAll">
                 {
-                    doctors.map((doctor, index) => {
+                    doctors.filter((doctor) =>
+                        
+                    search.trim() === '' || doctor.name.toLowerCase() === search.toLowerCase() || doctor.yearsOfExperience===search ||
+                    doctor.specialization.toLowerCase() === search.toLowerCase() || doctor.phone.toLowerCase() === search.toLowerCase() )
+                    .map((doctor, index) => {
                         return (<Doctor key={index} path={doctor} />)
                     })
+                    
                 }
             </div>
         </div>

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../HospitalSlice";
 import NavBar from "./NavBar";
+import {toast } from 'react-toastify';
 
 function Login() {
 
@@ -17,7 +18,7 @@ function Login() {
     const[user,setUser]=useState(
         {
             "userId": 0,
-            "email": "",
+            "email": "kishore@gmail.com",
             "password": "",
             "role": "",
             "token": ""
@@ -60,13 +61,14 @@ function Login() {
             {
                 setCredentail("Invalid Username or password");
             }
-            else if(data.status==401)
+            else if(data.status==420)
             {
                 setCredentail("Server down try again");
             }
         })
         .catch((err)=>
         {
+            toast.warning('Unable to login now');
                 console.log(err.error)
         })
     }
@@ -74,11 +76,20 @@ function Login() {
     var decide=()=>
     {
         if(myData.role==="Admin")
+        {
+            toast.success('Success');
             navigate('/adminPage');
+        }
         else if(myData.role==="Doctor")
+        {
+            // toast.success('Success');
             navigate('/doctorPage');
+        }
         else if(myData.role==="Patient")
+        {
+            toast.success('Success');
             navigate('/patientPage');
+        }
     }
 
     var settingLocalStorage=()=>{
@@ -88,9 +99,9 @@ function Login() {
     }
 
     var removingLocalStorage=()=>{
-        localStorage.clear("token");
-        localStorage.clear("role");
-        localStorage.clear("userId");
+        localStorage.clear("");
+        // localStorage.clear("role");
+        // localStorage.clear("userId");
     }
 
     return (
@@ -105,13 +116,16 @@ function Login() {
                         variant="outlined"
                         title="Username"
                         name="username"
-                        onChange={(event)=>{
+                        onBlur={(event)=>{
                             setUser({...user,"email":event.target.value})
                         }}
                         placeholder="Enter Username"
 
                         fullWidth
                     />
+                    {
+                            user.email.includes('@gmail.com')==false?(<p className="passwords">*Enter valid Email address</p>):(<div></div>)
+                    }
                     <TextField
                         id="password"
                         variant="outlined"

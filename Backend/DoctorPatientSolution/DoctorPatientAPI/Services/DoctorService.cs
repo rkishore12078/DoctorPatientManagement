@@ -39,6 +39,7 @@ namespace DoctorPatientAPI.Services
 
         private bool IsStrongPassword(string? tempPassword)
         {
+            if(tempPassword == null) return false;
             if(tempPassword.Length>=6 && 
                 tempPassword.Any(char.IsUpper) && 
                 tempPassword.Any(char.IsLower) &&
@@ -59,13 +60,13 @@ namespace DoctorPatientAPI.Services
         {
             var doctor = await _doctorRepo.Get(doctorDTO.DoctorId);
             if(doctor == null) return null;
-            doctor.Name= doctorDTO.Name!=null?doctorDTO.Name:doctor.Name;
-            doctor.Phone=doctorDTO.Phone!=null?doctorDTO.Phone:doctor.Phone;
-            doctor.DateOfBirth= doctorDTO.DateOfBirth.Date!=DateTime.Now.Date?doctorDTO.DateOfBirth:doctorDTO.DateOfBirth;
-            doctor.Specialization=doctorDTO.Specialization!=null?doctorDTO.Specialization:doctor.Specialization;
-            doctor.Qualification=doctorDTO.Qualification!=null?doctorDTO.Qualification:doctor.Qualification;
-            doctor.Address=doctorDTO.Address!=null?doctorDTO.Address:doctor.Address;
-            doctor.YearsOfExperience=doctorDTO.YearsOfExperience>0?doctorDTO.YearsOfExperience:doctorDTO.YearsOfExperience;
+            doctor.Name= doctorDTO.Name ?? doctor.Name;
+            doctor.Phone = doctorDTO.Phone ?? doctor.Phone;
+            doctor.DateOfBirth= doctorDTO.DateOfBirth.Date!=DateTime.Now.Date?doctorDTO.DateOfBirth:doctor.DateOfBirth;
+            doctor.Specialization= doctorDTO.Specialization ?? doctor.Specialization;
+            doctor.Qualification= doctorDTO.Qualification ?? doctor.Qualification;
+            doctor.Address= doctorDTO.Address ?? doctor.Address;
+            doctor.YearsOfExperience=doctorDTO.YearsOfExperience>0?doctorDTO.YearsOfExperience:doctor.YearsOfExperience;
             var myDoctor=await _doctorRepo.Update(doctor);
             if (myDoctor != null)
             {
@@ -93,8 +94,8 @@ namespace DoctorPatientAPI.Services
         }
         public async Task<List<Doctor>?> DoctorFilters(Status status)
         {
-            List<int> ids = new List<int>();
-            List<Doctor>? doctorFilters= new List<Doctor>();
+            List<int> ids = new();
+            List<Doctor>? doctorFilters= new();
             var users=await _userRepo.GetAll();
             if (users != null)
             {
@@ -109,24 +110,31 @@ namespace DoctorPatientAPI.Services
             {
                 foreach (var value in ids)
                 {
-                    doctorFilters.Add(doctors.SingleOrDefault(d => d.DoctorId == value));
+                    var obj=doctors.SingleOrDefault(d => d.DoctorId == value);
+                    if (obj != null)
+                    {
+                        doctorFilters.Add(obj);
+                    }
                 }
             }
             if(doctorFilters != null) return doctorFilters;
             return null;
         }
 
-        public async Task<List<string>?> Specializations()
+        public async Task<List<string?>> Specializations()
         {
-            List<string>? specializations= new List<string>();
+            List<string?> specializations= new ();
             var doctors=await _doctorRepo.GetAll();
             if (doctors != null)
             {
-                specializations = doctors.Select(d=>d.Specialization).Distinct().ToList();
-                if(specializations!=null)
-                    return specializations;
+                if (doctors != null)
+                {
+                    specializations = doctors.Select(d => d.Specialization).Distinct().ToList();
+                    if (specializations != null)
+                        return specializations;
+                }
             }
-            return null;
+            throw new Exception();
         }
     }
 }

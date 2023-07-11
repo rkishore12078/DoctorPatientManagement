@@ -35,9 +35,14 @@ namespace DoctorPatientAPI.Services
             }
         }
 
-        public Task<User?> Delete(int id)
+        public async Task<User?> Delete(int id)
         {
-            throw new NotImplementedException();
+            var doctor = await _context.Users.SingleOrDefaultAsync(d => d.UserId == id);
+            if (doctor != null)
+            {
+                return doctor;
+            }
+            return null;
         }
 
         public async Task<User?> Get(int id)

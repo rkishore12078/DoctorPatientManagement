@@ -58,5 +58,28 @@ namespace DoctorPatientAPI.Services
                 return patient;
             return null;
         }
+
+        public async Task<UserDTO?> UpdatePatient(PatientDTO patientDTO)
+        {
+            var patient = await _patientRepo.Get(patientDTO.PatientId);
+            if (patient != null)
+            {
+                patient.Name= patientDTO.Name;
+                patient.DateOfBirth= patientDTO.DateOfBirth;
+                patient.Address= patientDTO.Address;
+                patient.Phone= patientDTO.Phone;
+                patient.MedicalHistory= patientDTO.MedicalHistory;
+                patient.EmergencyContactName= patientDTO.EmergencyContactName; 
+                patient.EmergencyContactNumber= patientDTO.EmergencyContactNumber;
+                var myPatient = await _patientRepo.Update(patient);
+                if (myPatient != null)
+                {
+                    var userDTO =await _adapterDTO.PatientIntoUserDTO(patientDTO);
+                    if(userDTO!=null) return userDTO;
+
+                }
+            }
+            return null;
+        }
     }
 }

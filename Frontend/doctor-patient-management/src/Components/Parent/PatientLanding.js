@@ -1,6 +1,9 @@
 import PatientDoctor from "../Child/PatientDoctor";
 import NavBar from "../NavBar";
 import { useState ,useEffect, useCallback} from "react";
+import '../../Css/PatientLanding.css'
+import {toast } from 'react-toastify';
+
 
 function PatientLanding()
 {
@@ -19,7 +22,6 @@ function PatientLanding()
     const[ids,setIds]=useState([]);
     var [specializations,setSpecializations]=useState([]);
     const [error, setError] = useState(null);
-    const[experience,setExperience]=useState('');
 
     var skill;
     var tempDoctors=[];
@@ -113,12 +115,19 @@ function PatientLanding()
             .then(async (data) => {
                 if (data.status == 200) {
                     doctors=await data.json();
+                    // console.log(mydoctors)
                     setDoctors(doctors);
                     saveDoctor=doctors;
                     setSaveDoctor(saveDoctor);
-                    console.log(saveDoctor[0])
+                    console.log(saveDoctor[0]);
                     console.log(doctors[0]);
                 }
+                else{
+                    var newData=await data.json();
+                    if(newData.id==404)
+                        toast.warning('No Doctors found');
+                }
+                
             })
             .catch((err) => {
                 setError(err.message);
@@ -154,49 +163,60 @@ function PatientLanding()
     return(
         <div>
             <NavBar user={user}/>
-            <div>
-                <select defaultValue={'DEFAULT'} onChange={specializationFilter}>
-                    <option value='DEFAULT' disabled>Select....</option>
-                    <option value='All'>All</option>
+            <div className="patients-body">
+            <div className="filter">
+                <select style={{height:"40px",
+                                    width:"10%",
+                                    marginTop:"5px",
+                                    appearance:'none',
+                                    outline:'none',
+                                    cursor:'pointer',
+                                    borderColor:'#70be51',
+                                    borderRadius:"10px",
+                                    paddingLeft:"10px"}} className="flter-dropdown" defaultValue={'DEFAULT'} onChange={specializationFilter}>
+                    <option className="opt" value='DEFAULT' disabled>Select....</option>
+                    <option className="opt" value='All'>All</option>
                     {
                         specializations.map((specialization,index)=>{
-                            return(<option key={index}>{specialization}</option>)
+                            return(<option className="opt" key={index}>{specialization}</option>)
                         })
                     }
                 </select>
             </div>
-            <div>
-                <input type="number" onChange={(event)=>{
-                    setExperience(...experience,event.target.value);
-                }}/>
-            </div>
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <td>Name</td>
-                            <td>Age</td>
-                            <td>Gender</td>
-                            <td>Phone</td>
-                            <td>Specilization</td>
-                            <td>Qualification</td>
-                            <td>YearsOfExperience</td>
+            <div className="tbl-name">
+                <table className="tbl-body">
+                    <thead className="tbl-head">
+                        <tr className="tbl-row">
+                            <td className="tbl-col">Name</td>
+                            <td className="tbl-col">Age</td>
+                            <td className="tbl-col">Gender</td>
+                            <td className="tbl-col">Phone</td>
+                            <td className="tbl-col">Specilization</td>
+                            <td className="tbl-col">Qualification</td>
+                            <td className="tbl-col">Experience</td>
                         </tr>
                     </thead>
+                    {/* <div>
+                        {
+                            doctors==null &&   <div>toast.warning('No Doctors found')</div>
+
+                        }
+                    </div> */}
                         {
                             ids.map((id,ind)=>{
                                 return(
                                     <tbody key={ind}>
-                                        {
-                                            doctors.filter(d=>d.doctorId==id).map((doctor, inde) => {
+                                        { doctors.length>0?(
+                                            doctors.filter(d=>d!=null &&d.doctorId==id).map((doctor, inde) => {
                                                 return (<PatientDoctor key={inde} path={doctor} />)
-                                            })
+                                            })):(<div>no doctors found</div>)
                                         }
                                     </tbody>
                                 )
                             })
                         }
                 </table>
+            </div>
             </div>
         </div>
     )

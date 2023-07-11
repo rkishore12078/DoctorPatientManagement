@@ -20,7 +20,7 @@ namespace DoctorPatientAPI.Controllers
         private readonly IManagePatient _patientService;
         private readonly IManageUser _userService;
         private readonly ILogger<HospitalController> _logger;
-        Error error;
+        private Error error;
         public HospitalController(IManageDoctor doctorService,
                                     IManagePatient patientService,
                                     IManageUser userService,
@@ -49,19 +49,19 @@ namespace DoctorPatientAPI.Controllers
             {
                 if(ex.number== 2627 || ex.number == 2601)
                 {
-                    error.ID = 400;
+                    error.ID = 410;
                     error.Message = new Messages().messages[12];
                 }
                 else
                 {
-                    error.ID = 400;
+                    error.ID = 420;
                     error.Message = ex.Message;
                 }
 
             }
             catch (Exception)
             {
-                error.ID = 400;
+                error.ID = 420;
                 error.Message = new Messages().messages[8];
                 _logger.LogError(error.Message);
             }
@@ -84,19 +84,19 @@ namespace DoctorPatientAPI.Controllers
             {
                 if (ex.number == 2627 || ex.number == 2601)
                 {
-                    error.ID = 400;
+                    error.ID = 410;
                     error.Message = new Messages().messages[12];
                 }
                 else
                 {
-                    error.ID = 400;
+                    error.ID = 420;
                     error.Message = ex.Message;
                 }
 
             }
             catch (Exception)
             {
-                error.ID = 400;
+                error.ID = 420;
                 error.Message = new Messages().messages[8];
                 _logger.LogError(error.Message);
             }
@@ -117,7 +117,7 @@ namespace DoctorPatientAPI.Controllers
             }
             catch (Exception)
             {
-                error.ID = 401;
+                error.ID = 420;
                 error.Message = new Messages().messages[8];
                 _logger.LogError(error.Message);
             }
@@ -176,18 +176,55 @@ namespace DoctorPatientAPI.Controllers
             return BadRequest(error);
         }
 
+        [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]//Success Response
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(Roles ="Doctor")]
         [HttpPut]
         public async Task<ActionResult<UserDTO?>> UpdateDoctorDetails(DoctorDTO doctorDTO)
         {
-            var doctor=await _doctorService.UpdateDetails(doctorDTO);
-            if(doctor!=null)
-                return Ok(doctor);
-            return BadRequest("Error");
+            try
+            {
+                var doctor = await _doctorService.UpdateDetails(doctorDTO);
+                if (doctor != null)
+                    return Ok(doctor);
+                error.ID = 404;
+                error.Message = new Messages().messages[2];
+            }
+            catch (Exception)
+            {
+                error.ID = 400;
+                error.Message = new Messages().messages[8];
+                _logger.LogError(error.Message);
+            }
+            return BadRequest(error);
         }
 
-        
-        
+        [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]//Success Response
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "Patient")]
+        [HttpPut]
+        public async Task<ActionResult<UserDTO?>> UpdatePatientDetails(PatientDTO patientDTO)
+        {
+            try
+            {
+                var patient = await _patientService.UpdatePatient(patientDTO);
+                if (patient != null)
+                    return Ok(patient);
+                error.ID = 404;
+                error.Message = new Messages().messages[2];
+            }
+            catch (Exception)
+            {
+                error.ID = 400;
+                error.Message = new Messages().messages[8];
+                _logger.LogError(error.Message);
+            }
+            return BadRequest(error);
+        }
+
+
         [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]//Success Response
         [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

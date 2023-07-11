@@ -12,6 +12,8 @@ import DoctorLanding from './Components/Parent/DoctorLanding';
 import Logout from './Components/Logout';
 import PatientLanding from './Components/Parent/PatientLanding';
 import PatientUpdate from './Components/Parent/PatientUpdate';
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 
 function App() {
@@ -21,6 +23,7 @@ function App() {
 
   return (
     <div className="App">
+      <ToastContainer theme='colored'></ToastContainer>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home/>}/>

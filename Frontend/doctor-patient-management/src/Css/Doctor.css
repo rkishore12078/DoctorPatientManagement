@@ -1,15 +1,28 @@
-tr,td{
+.table-row,.table-col{
     padding:10px;
     text-align: center;
 }
-table{
-    width: 100px;
+.table-container{
+    width: 200px;
     margin: 10px;
     border-collapse: collapse;
     border-radius: 10px;
     border-style: hidden; /* hide standard table (collapsed) border */
-    box-shadow: 0 0 0 1px #666;
+    font-size: medium;
+    width: 300px; /* Adjust the dimensions as needed */
+    background-color:#eaf4fc; /* Set the background color of the card */
+    border-radius: 8px; /* Apply rounded corners to the card */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
 }
-table,td{
+table.container,.table-col{
     border-radius: 20px;
+}
+
+.table-col{
+    text-align: center;
+}
+
+.button{
+    width:100px;
 }

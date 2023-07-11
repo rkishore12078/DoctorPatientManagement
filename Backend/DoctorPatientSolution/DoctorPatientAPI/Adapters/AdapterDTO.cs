@@ -21,6 +21,7 @@ namespace DoctorPatientAPI.Adapters
         public User? DoctorIntoUser(DoctorDTO doctorDTO)
         {
             var hmac = new HMACSHA512();
+            if (doctorDTO.Users == null) return null;
             doctorDTO.Users.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(doctorDTO.Password ?? "1234"));
             doctorDTO.Users.PasswordKey = hmac.Key;
             doctorDTO.Users.Role = "Doctor";
@@ -30,6 +31,7 @@ namespace DoctorPatientAPI.Adapters
         public User? PatientIntoUser(PatientDTO patientDTO)
         {
             var hmac = new HMACSHA512();
+            if (patientDTO.Users == null) return null;
             patientDTO.Users.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(patientDTO.Password ?? "1234"));
             patientDTO.Users.PasswordKey = hmac.Key;
             patientDTO.Users.Role = "Patient";
@@ -37,8 +39,11 @@ namespace DoctorPatientAPI.Adapters
         }
         public async Task<UserDTO?> DoctorIntoUserDTO(DoctorDTO doctor)
         {
-            UserDTO user = new UserDTO();
-            user.UserId = doctor.DoctorId;
+            UserDTO userDTO = new()
+            {
+                UserId = doctor.DoctorId
+            };
+            UserDTO user = userDTO;
             var myUser = await _userRepo.Get(user.UserId);
             if (myUser == null) return null;
             user.Role = myUser.Role;
@@ -50,8 +55,10 @@ namespace DoctorPatientAPI.Adapters
 
         public async Task<UserDTO?> PatientIntoUserDTO(PatientDTO patient)
         {
-            UserDTO user = new UserDTO();
-            user.UserId = patient.PatientId;
+            UserDTO user = new()
+            {
+                UserId = patient.PatientId
+            };
             var myUser = await _userRepo.Get(user.UserId);
             if (myUser == null) return null;
             user.Role = myUser.Role;
@@ -63,11 +70,13 @@ namespace DoctorPatientAPI.Adapters
 
         public UserDTO? UserIntoUserDTO(User user)
         {
-            UserDTO? userDTO = new UserDTO();
-            userDTO.Email = user.Email;
-            userDTO.UserId = user.UserId;
-            userDTO.Role = user.Role;
-            userDTO.Status = user.DoctorState;
+            UserDTO? userDTO = new()
+            {
+                Email = user.Email,
+                UserId = user.UserId,
+                Role = user.Role,
+                Status = user.DoctorState
+            };
             userDTO.Token = _tokenService.GenerateToken(userDTO);
             return userDTO;
         }

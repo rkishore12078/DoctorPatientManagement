@@ -56,6 +56,28 @@
   .nav > .nav-links > .summa>.summa1>.a:hover {
     background-color: rgba(0, 0, 0, 0.3);
   }
+
+  .nav > .nav-links >  .summa>.summa1>.summa2>.a{
+    display: inline-block;
+    padding: 13px 10px 13px 10px;
+    text-decoration: none;
+    color: #efefef;
+  }
+  
+  .nav > .nav-links > .summa>.summa1>.summa2>.a:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .nav > .nav-links >  .summa>.summa1>.summa3>.a{
+    display: inline-block;
+    padding: 13px 10px 13px 10px;
+    text-decoration: none;
+    color: #efefef;
+  }
+  
+  .nav > .nav-links > .summa>.summa1>.summa3>.a:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
   
   .nav > #nav-check {
     display: none;
